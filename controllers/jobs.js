@@ -1,4 +1,5 @@
 const { StatusCodes } = require("http-status-codes");
+const { BadRequestError } = require("../errors");
 const Jobs = require("../models/Job");
 const User = require("../models/User");
 
@@ -20,4 +21,16 @@ const createJob = async (req, res) => {
 	res.json(req.body).status(StatusCodes.CREATED);
 };
 
-module.exports = { getJobs, getJob, createJob };
+const deleteJob = async (req, res) => {
+	const { id: jobID } = req.params;
+	const job = await Jobs.findById(jobID);
+	// Checks if the job does not belong to the user trying to delete it.
+	if (job.createdBy != req.user.id) {
+		throw new BadRequestError("You do not have the required permission.");
+	}
+
+	await Jobs.deleteOne(job);
+	res.json({ msg: "Success." }).status(StatusCodes.OK);
+};
+
+module.exports = { getJobs, getJob, createJob, deleteJob };
