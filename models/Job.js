@@ -27,8 +27,6 @@ const jobsSchema = new mongoose.Schema(
 	{ timestamps: true }
 );
 
-// jobsSchema.pre("save", function () {
-// 	this.createdBy = req.user.id;
-// });
+
 
 module.exports = mongoose.model("Jobs", jobsSchema);

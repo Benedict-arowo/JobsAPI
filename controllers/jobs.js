@@ -17,12 +17,12 @@ const getJob = async (req, res) => {
 	const { id: jobID } = req.params;
 	// Gets jobs who matches the given id, and has been created by the current user.
 	const job = await Jobs.findOne({ createdBy: req.user.id, _id: jobID });
-	res.json(job).status(StatusCodes.OK);
+	res.json({ job }).status(StatusCodes.OK);
 };
 
 const createJob = async (req, res) => {
 	const job = await Jobs.create([{ ...req.body, createdBy: req.user.id }]);
-	res.json(req.body).status(StatusCodes.CREATED);
+	res.json(job[0]).status(StatusCodes.CREATED);
 };
 
 const editJob = async (req, res) => {
@@ -40,7 +40,7 @@ const editJob = async (req, res) => {
 	if (!job) {
 		throw new BadRequestError(`No job with id ${jobID}`);
 	}
-	res.json(job).status(StatusCodes.OK);
+	res.json({ job }).status(StatusCodes.OK);
 };
 
 const deleteJob = async (req, res) => {
